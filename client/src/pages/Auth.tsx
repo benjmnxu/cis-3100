@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext"
+import { useNavigate } from "react-router-dom";
 
 export default function AuthCard() {
   const { login, signup } = useAuth();
@@ -7,6 +8,7 @@ export default function AuthCard() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,10 +21,12 @@ export default function AuthCard() {
       if (isLogin) {
         await login(email, password);
         alert("Logged in!");
+        navigate("/profile");
       } else {
         await signup(email, password);
         await login(email, password);
         alert("Signed up and logged in!");
+        navigate("/profile");
       }
     } catch (err) {
       alert((err as Error).message);
@@ -30,7 +34,7 @@ export default function AuthCard() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="flex items-center justify-center px-4">
       <div className="bg-white border-1 border-gray-300 rounded-lg shadow-md p-6 w-full max-w-sm">
         <h2 className="text-2xl font-bold text-center mb-6">
           {isLogin ? "Login" : "Sign Up"}

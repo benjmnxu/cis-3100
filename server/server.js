@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 8000;
 
 // Middlewares
 app.use(cors({
-  origin: 'http://localhost:3000', // Adjust if frontend is elsewhere
+  origin: 'http://localhost:5173', // Adjust if frontend is elsewhere
   credentials: true
 }));
 app.use(express.json());

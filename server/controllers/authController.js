@@ -46,7 +46,7 @@ exports.login = async (req, res) => {
 
     // Send JWT as HTTP-only cookie
     res
-      .cookie('token', token, { httpOnly: true })
+      .cookie('token', token, { httpOnly: true, sameSite:"lax" })
       .json({ id: user.id, email: user.email });
   } catch (err) {
     console.error(err);

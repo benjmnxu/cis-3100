@@ -1,7 +1,49 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@theme {
+  --color-cream: #faf3e0;
+}
+
+/* in your index.css (or wherever you put global styles) */
+input[type="file"] {
+  /* no “box” around filename text */
+  border: none;
+  padding: 0;
+}
+
+/* the actual button that says “Choose File” */
+input[type="file"]::file-selector-button {
+  border: 1px solid #000;         /* or theme color, e.g. border-neutral-950 */
+  border-radius: 0.25rem;         /* Tailwind’s rounded */
+  padding: 0.5rem 1rem;           /* tweak to taste */
+  margin-right: 0.5rem;           /* give a little gap before filename */
+  background: white;              /* so it still looks like a button */
+  cursor: pointer;
+}
+
+/* for Safari/older WebKit support */
+input[type="file"]::-webkit-file-upload-button {
+  /* same styles as above */
+  border: 1px solid #000;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  background: white;
+  cursor: pointer;
+}
+
+
+@layer utilities {
+  .no-scrollbar {
+    /* for Firefox */
+    scrollbar-width: none;
+    /* for IE 10+ */
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

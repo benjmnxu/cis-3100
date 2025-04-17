@@ -15,6 +15,14 @@ export type Recipe = {
     created_at: string;
   };
 
+export type Review = {
+  id: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+  user_id: string;
+  reviewer_email: string;
+}
 
 export const mockData: Recipe[] = [
     {

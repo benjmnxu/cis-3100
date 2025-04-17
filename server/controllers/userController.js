@@ -6,7 +6,7 @@ exports.getUserProfile = async (req, res) => {
 
   try {
     // Check that user is requesting their own profile
-    if (parseInt(id) !== req.user.id) {
+    if (id !== req.user.id) {
       return res.status(403).json({ message: 'Access denied' });
     }
 
