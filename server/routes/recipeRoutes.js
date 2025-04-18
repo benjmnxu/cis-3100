@@ -8,6 +8,8 @@ const upload = require('../middleware/uploadMiddleware');
 // Public routes
 router.get('/', recipeController.getAllRecipes);
 router.get('/:id', recipeController.getRecipeById);
+router.get('/user/:userId', recipeController.getRecipesByUser);
+
 
 // Protected route – must be logged in to create
 router.post('/', authMiddleware, recipeController.createRecipe);

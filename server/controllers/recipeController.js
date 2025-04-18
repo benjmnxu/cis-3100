@@ -146,3 +146,18 @@ exports.deleteRecipe = async (req, res) => {
     res.status(500).json({ message: 'Error deleting recipe' });
   }
 };
+
+exports.getRecipesByUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const recipes = await db('recipes')
+      .where({ user_id: userId })
+      .select('id', 'title', 'description', 'cuisine_type', 'difficulty_level', 'created_at');
+
+    res.json(recipes);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching user recipes' });
+  }
+};
