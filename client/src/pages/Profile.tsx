@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom"; // for redirect after logout
 import RecipeCard from "../components/RecipeCard";
+import { Recipe } from "../types/types";
 
 type UserProfile = {
   id: number;
@@ -10,20 +11,42 @@ type UserProfile = {
   created_at?: string;
 };
 
-type Recipe = {
-  id: number;
-  title: string;
-  image: string;
-  description: string;
-};
-
 const BASE_URL = "http://localhost:8000/api";
 
 export default function Profile() {
   const { user: authUser, logout } = useAuth(); // ⬅️ bring in logout
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [favorites, setFavorites] = useState<Recipe[]>([]);
+  const [userRecipes, setUserRecipes] = useState<Recipe[]>([]);
   const navigate = useNavigate();
+
+  async function fetchImages(recipes: Recipe[]): Promise<Recipe[]> {
+      return await Promise.all(
+        recipes.map(async (recipe) => {
+        try {
+          const imgRes = await fetch(
+            `${BASE_URL}/recipes/${recipe.id}/images`,
+            { credentials: "include" }
+          );
+
+          if (!imgRes.ok) return { ...recipe, imageUrl: "" };
+
+          const images: {
+            id: string;
+            file_path: string;
+            uploaded_at: string;
+          }[] = await imgRes.json();
+
+          return {
+            ...recipe,
+            imageUrl: "http://localhost:8000" + images[0]?.file_path,
+          };
+        } catch {
+          return { ...recipe, imageUrl: "" };
+        }
+      })
+    );
+  }
 
   useEffect(() => {
     if (!authUser) return;
@@ -42,12 +65,28 @@ export default function Profile() {
         credentials: "include",
       });
       if (!res.ok) return console.error("Failed to load favorites");
-      const data = await res.json();
-      setFavorites(data);
+      const recipes: Recipe[] = await res.json();
+
+      const enriched = await fetchImages(recipes);
+
+      setFavorites(enriched);
     };
+
+    const fetchUserRecipes = async () => {
+      const res = await fetch(`${BASE_URL}/recipes/user/${authUser.id}`);
+      if (!res.ok) return console.error("Failed to fetch user recipes");
+      const recipes: Recipe[] = await res.json();
+
+      console.log(recipes)
+
+      const enriched = await fetchImages(recipes);
+
+      setUserRecipes(enriched);
+    }
 
     fetchProfile();
     fetchFavorites();
+    fetchUserRecipes();
   }, [authUser]);
 
   const handleLogout = async () => {
@@ -85,12 +124,22 @@ export default function Profile() {
 
       {/* Favorite Recipes */}
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-xl font-semibold mb-4">Your Recipes</h2>
+        <h2 className="text-xl font-semibold mb-4">Favorite Recipes</h2>
         {favorites.length === 0 ? (
-          <p className="text-center text-gray-500">You haven't uploaded any recipes yet.</p>
+          <p className="text-center text-gray-500">You haven't favorited any recipes yet.</p>
         ) : (
           <div className="grid gap-4 grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]">
             {favorites.map((recipe) => (
+              <RecipeCard key={recipe.id} {...recipe} />
+            ))}
+          </div>
+        )}
+        <h2 className="text-xl font-semibold mb-4 mt-4">Your Recipes</h2>
+        {userRecipes.length === 0 ? (
+          <p className="text-center text-gray-500">You haven't uploaded any recipes yet.</p>
+        ) : (
+          <div className="grid gap-4 grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]">
+            {userRecipes.map((recipe) => (
               <RecipeCard key={recipe.id} {...recipe} />
             ))}
           </div>

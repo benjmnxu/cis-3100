@@ -12,10 +12,10 @@ export default function Sidebar() {
         flex flex-col items-center
       `}
     >
-      <div className="w-full flex justify-end px-2 py-4">
+      <div className="w-full flex justify-end px-2 py-8 mb-4">
         <button
           onClick={() => setExpanded(!expanded)}
-          className="text-white text-2xl"
+          className={`text-${expanded ? "white" : "black"} !text-4xl absolute right-0 top-0`}
           aria-label="Toggle Sidebar"
         >
           ☰
@@ -41,11 +41,11 @@ export default function Sidebar() {
                     Upload Recipe
                 </Link>
                 </li>
-                <li>
+                {/* <li>
                 <Link to="/categories" className="block px-2 py-2 hover:bg-gray-700 rounded">
                     Categories
                 </Link>
-                </li>
+                </li> */}
             </ul>
             </nav>
             <div className="mt-auto p-4 border-t border-gray-700">

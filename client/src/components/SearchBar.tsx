@@ -39,7 +39,6 @@ export default function SearchBar({
     fetchHistory();
   }, []);
 
-  // close dropdown when clicking outside
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -64,20 +63,46 @@ export default function SearchBar({
         credentials: "include",
       });
       if (!res.ok) throw new Error(`Error ${res.status}`);
-      const data: Recipe[] = await res.json();
-      onSearch(data);
+
+      const recipes: Recipe[] = await res.json();
+      const enriched = await Promise.all(
+        recipes.map(async (recipe) => {
+          try {
+            const imgRes = await fetch(
+              `${BASE_URL}/recipes/${recipe.id}/images`,
+              { credentials: "include" }
+            );
+
+            if (!imgRes.ok) return { ...recipe, imageUrl: "" };
+
+            const images: {
+              id: string;
+              file_path: string;
+              uploaded_at: string;
+            }[] = await imgRes.json();
+
+            return {
+              ...recipe,
+              imageUrl: "http://localhost:8000" + images[0]?.file_path
+            }
+          } catch {
+            return { ...recipe, imageUrl: "" };
+          }
+        })
+      );
+      onSearch(enriched);
 
       const histRes = await fetch(`${BASE_URL}/search-history`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q, results_count: data.length }),
+        body: JSON.stringify({ query: q, results_count: recipes.length }),
       });
       if (!histRes.ok) throw new Error(`History error ${histRes.status}`);
 
       setHistory((prev) => {
         const withoutDupes = prev.filter((h) => h.query !== q);
-        return [{ query: q, results_count: data.length }, ...withoutDupes];
+        return [{ query: q, results_count: recipes.length }, ...withoutDupes];
       });
     } catch (err) {
       console.error("Search failed:", err);
@@ -126,7 +151,7 @@ export default function SearchBar({
 
         {isHistoryOpen && history.length > 0 && (
           <ul className="absolute left-0 right-0 mt-1 bg-white border rounded shadow max-h-60 overflow-y-auto z-10">
-            {history.slice(0, 8).map((h, i) => (
+            {history.slice(0, Math.min(history.length, 8)).map((h, i) => (
               <li
                 key={i}
                 onMouseDown={() => handleHistoryClick(h.query)}

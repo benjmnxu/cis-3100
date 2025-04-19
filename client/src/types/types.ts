@@ -1,19 +1,24 @@
-import margheritaPizza from "../assets/margherita-pizza.jpeg";
-import charSiuBao from "../assets/char-siu-bao.jpg";
-
 export type Recipe = {
     id: number;
+    user_id: string;
     title: string;
-    image: string;
+    imageUrl: string;
     description: string;
     ingredients: string[];
     instructions: string;
     prep_time: number;
     cook_time: number;
     cuisine_type: string;
-    difficulty_level: number;
+    difficulty_level: string;
     created_at: string;
+    is_favorited: boolean;
   };
+
+export type ImageObject = {
+  file_path: string;
+  id: string;
+  uploaded_at: string;
+}
 
 export type Review = {
   id: string;
@@ -23,32 +28,3 @@ export type Review = {
   user_id: string;
   reviewer_email: string;
 }
-
-export const mockData: Recipe[] = [
-    {
-      id: 1,
-      title: "Margherita Pizza",
-      image: margheritaPizza,
-      description: "Classic pizza with tomato, mozzarella, and basil.",
-      ingredients: ["Tomato", "Mozzarella", "Basil", "Pizza dough"],
-      instructions: "Spread sauce, add cheese and toppings, bake at 475°F for 10-12 minutes.",
-      prep_time: 15,
-      cook_time: 10,
-      cuisine_type: "Italian",
-      difficulty_level: 1,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      title: "Char Siu Bao",
-      image: charSiuBao,
-      description: "Fluffy buns filled with sweet and savory BBQ pork.",
-      instructions: "Prepare char siu, make dough, fill, steam for 10-12 minutes.",
-      ingredients: ["Flour", "BBQ Pork", "Sugar", "Yeast", "Soy Sauce"],
-      prep_time: 20,
-      cook_time: 15,
-      cuisine_type: "Chinese",
-      difficulty_level: 2,
-      created_at: new Date().toISOString(),
-    },
-  ];

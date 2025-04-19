@@ -2,13 +2,13 @@
 import { useState, useEffect } from "react";
 import SearchBar from "../components/SearchBar";
 import RecipeCard from "../components/RecipeCard";
-import { Recipe, mockData } from "../types/types";
+import { Recipe } from "../types/types";
 import { useNavigate } from "react-router-dom";
 
+const BASE_URL = "http://localhost:8000/api"
 export default function Home() {
   const navigate = useNavigate();
 
-  // state for fetched favorites
   const [favorites, setFavorites] = useState<Recipe[]>([]);
   const [loadingFavs, setLoadingFavs] = useState(true);
   const [favError, setFavError] = useState<string | null>(null);
@@ -16,17 +16,44 @@ export default function Home() {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/favorites", {
+        const res = await fetch(`${BASE_URL}/favorites`, {
           method: "GET",
-          credentials: "include", // if your API uses cookies/session
+          credentials: "include",
         });
         if (res.status === 401) {
           setFavError("Please log in to see your favorites.");
           return;
         }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data: Recipe[] = await res.json();
-        setFavorites(data);
+        const recipes: Recipe[] = await res.json();
+
+        const enriched = await Promise.all(
+          recipes.map(async (recipe) => {
+            try {
+              const imgRes = await fetch(
+                `${BASE_URL}/recipes/${recipe.id}/images`,
+                { credentials: "include" }
+              );
+
+              if (!imgRes.ok) return { ...recipe, imageUrl: "" };
+  
+              const images: {
+                id: string;
+                file_path: string;
+                uploaded_at: string;
+              }[] = await imgRes.json();
+
+              return {
+                ...recipe,
+                imageUrl: "http://localhost:8000" + images[0]?.file_path,
+              };
+            } catch {
+              return { ...recipe, imageUrl: "" };
+            }
+          })
+        );
+        // 3) set into state
+        setFavorites(enriched);
       } catch (err: any) {
         console.error("Failed to load favorites:", err);
         setFavError(err.message || "Unknown error");
@@ -69,22 +96,14 @@ export default function Home() {
               <p className="text-center text-gray-500">No favorites yet.</p>
             ) : (
               <div className="flex flex-wrap justify-center gap-4">
-                {favorites.map((r) => (
-                  <RecipeCard key={r.id} {...r} />
-                ))}
+                {favorites.map((r) => {
+                  return (
+                    <RecipeCard key={r.id} {...r} />
+                  );
+                })}
               </div>
             )}
           </div>
-
-          {/* Trending */}
-          {/* <div>
-            <h2 className="text-xl font-semibold text-center mb-4">Trending Recipes</h2>
-            <div className="flex flex-wrap justify-center gap-4">
-              {mockData.map((r) => (
-                <RecipeCard key={r.id} {...r} />
-              ))}
-            </div>
-          </div> */}
         </div>
       </section>
     </main>

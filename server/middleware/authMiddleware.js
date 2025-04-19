@@ -1,19 +1,32 @@
+// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
-module.exports = (req, res, next) => {
+function required(req, res, next) {
   try {
-    // Read token from cookies
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: 'Missing token' });
-
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Attach user info to request
-    req.user = decoded;
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
     next();
   } catch (err) {
     console.error(err);
     res.status(401).json({ message: 'Invalid or expired token' });
   }
+}
+
+function optional(req, res, next) {
+  const token = req.cookies.token;
+  if (token) {
+    try {
+      req.user = jwt.verify(token, process.env.JWT_SECRET);
+    } catch {
+      console.error(err);
+      res.status(err.status).json({ message: 'Error' });
+    }
+  }
+  next();
+}
+
+module.exports = {
+  required,
+  optional
 };

@@ -98,7 +98,7 @@ export default function AuthCard() {
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="py-2 px-4 text-white rounded-md hover:text-gray transition"
+            className="py-2 px-4 text-black rounded-md hover:underline transition"
           >
             {isLogin ? "Sign Up" : "Login"}
           </button>

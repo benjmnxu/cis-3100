@@ -36,21 +36,34 @@ exports.getAllRecipes = async (req, res) => {
 
 // ✅ Get one recipe by ID
 exports.getRecipeById = async (req, res) => {
-  const { id } = req.params;
+  const { id }   = req.params;
+  const userId   = req.user?.id;
 
   try {
-    const recipe = await db('recipes').where({ id }).first();
+    const recipe = await db('recipes')
+      .where({ id })
+      .first();
 
     if (!recipe) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
 
-    res.json(recipe);
+    let isFavorited = false;
+    if (userId) {
+      const fav = await db('favorite_recipes')
+        .where({ user_id: userId, recipe_id: id })
+        .first();
+      isFavorited = !!fav;
+    }
+
+    recipe.is_favorited = isFavorited;
+    return res.json(recipe);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error fetching recipe' });
+    return res.status(500).json({ message: 'Error fetching recipe' });
   }
 };
+
 
 // ✅ Create recipe (no image logic)
 exports.createRecipe = async (req, res) => {

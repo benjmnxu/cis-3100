@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('../middleware/authMiddleware');
+const { required } = require('../middleware/authMiddleware');
 const searchController = require('../controllers/searchController');
 
 // 🔐 Protected
-router.post('/search-history', authMiddleware, searchController.addSearchEntry);
-router.get('/search-history', authMiddleware, searchController.getSearchHistory);
+router.post('/search-history', required, searchController.addSearchEntry);
+router.get('/search-history', required, searchController.getSearchHistory);
 
 module.exports = router;
