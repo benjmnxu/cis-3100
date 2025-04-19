@@ -21,7 +21,7 @@ export default function EditRecipeModal({ isOpen, onClose, recipe, existingImage
     const [cookTimeInput, setCookTimeInput] = useState(String(recipe.cook_time));
     const [cuisine, setCuisine] = useState(recipe.cuisine_type);
     const [difficulty, setDifficulty] = useState(recipe.difficulty_level);
-    const [images, setImages] = useState<ImageObject[]>(existingImages);
+    const [images, setImages] = useState<File | ImageObject[]>(existingImages);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,6 +34,7 @@ export default function EditRecipeModal({ isOpen, onClose, recipe, existingImage
         cook_time: Number(cookTimeInput),
         cuisine_type: cuisine,
         difficulty_level: difficulty,
+        images: images
     });
     onClose();
   };

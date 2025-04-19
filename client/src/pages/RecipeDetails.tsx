@@ -491,6 +491,19 @@ export default function RecipeDetail() {
             setRecipe({ ...dataRaw, ingredients: ingredientsArr });
             setIsEditOpen(false);
           }
+          if (updated.images) {
+            updated.images.map(async (image) => {
+              const formData = new FormData();
+              formData.append("image", image);
+              formData.append("recipe_id", recipe!.id.toString());
+              const imgRes = await fetch(`${BASE_URL}/images`, {
+                method: "POST",
+                credentials: "include",
+                body: formData,
+              });
+              if (!imgRes.ok) throw new Error("Failed to upload image");
+            })
+          }
         }}
       />
     </div>

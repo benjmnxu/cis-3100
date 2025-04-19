@@ -9,7 +9,6 @@ export default function UploadRecipe() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("")
-  const [ingredients, setIngredients] = useState("");
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [ingredientInput, setIngredientInput] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -17,7 +16,7 @@ export default function UploadRecipe() {
   const [cookTimeInput, setCookTimeInput] = useState<string>("");
   const [cuisine, setCuisine] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
-  const [images, setImages] = useState<File[] | null>(null);
+  const [images, setImages] = useState<File[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +72,7 @@ export default function UploadRecipe() {
       setCuisine("");
       setPrepTimeInput("");
       setCookTimeInput("");
-      setImages(null);
+      setImages([]);
 
       navigate(`/recipes/${recipeId.toString()}`)
     } catch (err) {

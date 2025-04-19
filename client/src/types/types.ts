@@ -12,6 +12,7 @@ export type Recipe = {
     difficulty_level: string;
     created_at: string;
     is_favorited: boolean;
+    images: (File | ImageObject)[];
   };
 
 export type ImageObject = {
