@@ -166,18 +166,14 @@ export default function SearchBar({
       </div>
 
       <div className="flex gap-2">
-        <select
+        <input
           value={cuisine}
-          onChange={(e) => setCuisine(e.target.value)}
           className="flex-1 p-2 border rounded"
-        >
-          <option value="">All Cuisines</option>
-          <option value="Mexican">Mexican</option>
-          <option value="Italian">Italian</option>
-          <option value="Chinese">Chinese</option>
-          <option value="American">American</option>
-        </select>
-
+          placeholder="All Cuisines"
+          onChange={(e) => setCuisine(e.target.value)}
+          >
+        
+        </input>
         <select
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}

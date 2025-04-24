@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import RecipeCard from "../components/RecipeCard";
 import { Recipe } from "../types/types";
+import { useLocation } from "react-router-dom";
 
 export default function SearchRecipes() {
-  const [results, setResults] = useState<Recipe[]>([]);
+  const location = useLocation();
+  const incomingResults = location.state?.results as Recipe[] | undefined;
+
+  const [results, setResults] = useState<Recipe[]>(incomingResults || []);
+
+  useEffect(() => {
+    if (incomingResults) {
+      setResults(incomingResults);
+    }
+  }, []); 
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">

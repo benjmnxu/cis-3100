@@ -65,8 +65,8 @@ export default function Home() {
     fetchFavorites();
   }, []);
 
-  const handleSearch = (query: string) => {
-    navigate(`/search?query=${encodeURIComponent(query)}`);
+  const handleSearch = (results: Recipe[]) => {
+    navigate("/search", { state: { results } });
   };
 
   return (
