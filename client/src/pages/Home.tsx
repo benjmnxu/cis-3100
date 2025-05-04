@@ -65,8 +65,8 @@ export default function Home() {
     fetchFavorites();
   }, []);
 
-  const handleSearch = (results: Recipe[]) => {
-    navigate("/search", { state: { results } });
+  const handleSearch = (params: {query: string, cuisine: string, difficulty: string}, results: Recipe[]) => {
+    navigate("/search", { state: { params, results } });
   };
 
   return (
@@ -81,7 +81,7 @@ export default function Home() {
         </div>
 
         {/* Search */}
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} params={null}/>
 
         {/* Favorites & Trending */}
         <div className="border-t pt-6 space-y-6">

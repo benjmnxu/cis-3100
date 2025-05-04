@@ -6,20 +6,20 @@ const BASE_URL = "http://localhost:8000/api";
 
 export default function SearchBar({
   onSearch,
+  params,
 }: {
-  onSearch: (results: Recipe[]) => void;
+  onSearch: (params: {query: string, cuisine: string, difficulty: string}, results: Recipe[]) => void;
+  params: {query: string, cuisine: string, difficulty: string} | null;
 }) {
-  const [query, setQuery] = useState("");
-  const [cuisine, setCuisine] = useState("");
-  const [difficulty, setDifficulty] = useState("");
+  const [query, setQuery] = useState(params?.query || "");
+  const [cuisine, setCuisine] = useState(params?.cuisine || "");
+  const [difficulty, setDifficulty] = useState(params?.difficulty || "");
   const [loading, setLoading] = useState(false);
 
-  // Search history
   const [history, setHistory] = useState<
     { query: string; results_count: number }[]
   >([]);
 
-  // dropdown open?
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +31,7 @@ export default function SearchBar({
           credentials: "include",
         });
         if (!res.ok) throw new Error(`Error ${res.status}`);
-        setHistory(await res.json());
+        handleSetHistory(await res.json());
       } catch (err) {
         console.error("Failed to load search history:", err);
       }
@@ -90,7 +90,7 @@ export default function SearchBar({
           }
         })
       );
-      onSearch(enriched);
+      onSearch({query: q, cuisine: cuisine, difficulty: difficulty} ,enriched);
 
       const histRes = await fetch(`${BASE_URL}/search-history`, {
         method: "POST",
@@ -104,11 +104,27 @@ export default function SearchBar({
         const withoutDupes = prev.filter((h) => h.query !== q);
         return [{ query: q, results_count: recipes.length }, ...withoutDupes];
       });
+
     } catch (err) {
       console.error("Search failed:", err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSetHistory = (rawHistory: { query: string; results_count: number; search_date: string }[]) => {
+    const map = new Map<string, { query: string; results_count: number }>();
+  
+    for (const item of rawHistory) {
+
+      map.set(item.query, {
+        query: item.query,
+        results_count: item.results_count,
+      });
+    }
+  
+    const deduped = Array.from(map.values());
+    setHistory(deduped);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

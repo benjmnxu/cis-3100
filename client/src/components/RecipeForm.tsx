@@ -91,6 +91,7 @@ export default function RecipeForm({
           value={title}
           onChange={e => setTitle(e.target.value)}
           className="w-full p-2 border rounded"
+          placeholder="Name"
           required
         />
       </div>
@@ -103,6 +104,7 @@ export default function RecipeForm({
           onChange={e => setDescription(e.target.value)}
           className="w-full p-2 border rounded h-24"
           required
+          placeholder="What makes this recipe special? How would you describe it?"
         />
       </div>
 
@@ -115,10 +117,11 @@ export default function RecipeForm({
           onChange={e => setIngredientInput(e.target.value)}
           onKeyDown={handleIngredientKeyDown}
           className="w-full p-2 border rounded"
+          placeholder="e.g. 2 cups of flour (PRESS 'ENTER' AFTER EACH INPUT)"
         />
-        <ul className="mt-2 list-disc pl-5">
+        <ul className="mt-2 list-disc pl-3 pr-3">
           {ingredients.map((ing, i) => (
-            <li key={i} className="flex items-center justify-between">
+            <li key={i} className="flex border rounded pl-3 bg-gray-50 items-center justify-between mb-1">
               {ing}
               <button
                 type="button"
@@ -140,6 +143,7 @@ export default function RecipeForm({
           onChange={e => setInstructions(e.target.value)}
           className="w-full p-2 border rounded h-40"
           required
+          placeholder="Step-by-step instructions..."
         />
       </div>
 
@@ -152,6 +156,7 @@ export default function RecipeForm({
           onChange={e => setCuisine(e.target.value)}
           className="w-full p-2 border rounded"
           required
+          placeholder="e.g. Mexican, Japanese"
         />
       </div>
 
@@ -166,6 +171,7 @@ export default function RecipeForm({
             onChange={e => setPrepTimeInput(e.target.value)}
             className="w-full p-2 border rounded"
             required
+            placeholder="in minutes"
           />
         </div>
         <div>
@@ -177,6 +183,7 @@ export default function RecipeForm({
             onChange={e => setCookTimeInput(e.target.value)}
             className="w-full p-2 border rounded"
             required
+            placeholder="in minutes"
           />
         </div>
       </div>

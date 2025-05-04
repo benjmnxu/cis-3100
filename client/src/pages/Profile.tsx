@@ -77,8 +77,6 @@ export default function Profile() {
       if (!res.ok) return console.error("Failed to fetch user recipes");
       const recipes: Recipe[] = await res.json();
 
-      console.log(recipes)
-
       const enriched = await fetchImages(recipes);
 
       setUserRecipes(enriched);
@@ -90,8 +88,8 @@ export default function Profile() {
   }, [authUser]);
 
   const handleLogout = async () => {
-    await logout();       // clear session and context
-    navigate("/auth");    // redirect to login page
+    await logout();
+    navigate("/auth");
   };
 
   if (!authUser || !profile) {
@@ -100,9 +98,8 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen px-4 py-8 overflow-y-auto">
-      {/* Profile card */}
       <div className="flex justify-center mb-8">
-        <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md text-center border">
+        <div className="bg-white rounded-xl shadow-lg p-6 w-fit max-w-full text-center border">
           <img
             src={`https://i.pravatar.cc/150?u=${profile.email}`}
             alt="User avatar"

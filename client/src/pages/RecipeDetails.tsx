@@ -10,9 +10,11 @@ import RecipeImageBanner from "../components/ImageBanner";
 const BASE_URL = "http://localhost:8000/api";
 
 function parsePgArray(psa: string): string[] {
-  let str = psa;
-  str = str.slice(3, str.length-3).replace(/\\"/g, "");
-  return str.split(",");
+  const arr = psa
+    .slice(1, -1) 
+    .split(/","/)
+    .map(s => s.replace(/^"|"$/g, ''));
+  return arr
 }
 
 export default function RecipeDetail() {
@@ -57,7 +59,7 @@ export default function RecipeDetail() {
           throw new Error(`Server error: ${res.status}`);
         } else {
           const dataRaw = await res.json();
-          const ingredientsArr: string[] = parsePgArray(dataRaw.ingredients)
+          const ingredientsArr: string[] = parsePgArray(dataRaw.ingredients[0])
           setRecipe({ ...dataRaw, ingredients: ingredientsArr });
           setIsFavorited(dataRaw.is_favorited);
         }
@@ -269,7 +271,7 @@ export default function RecipeDetail() {
 
   const reviewedThisRecipe =
     reviews.length > 0 && user
-      ? reviews.some((r) => r.user_id === String(user.id))
+      ? reviews.some((r) => r.user_id == user.id)
       : false;
 
   return (
@@ -380,7 +382,7 @@ export default function RecipeDetail() {
               <div className="text-xs text-gray-500">
                 By {r.reviewer_email} on {new Date(r.created_at).toLocaleDateString()}
               </div>
-              {user && r.user_id === String(user.id) && (
+              {user && r.user_id == user.id && (
                 <div className="flex gap-2 mt-1">
                   <button
                     onClick={() => handleDeleteReview(id)}
@@ -487,7 +489,7 @@ export default function RecipeDetail() {
           });
           if (res.ok) {
             const dataRaw = await res.json();
-            const ingredientsArr: string[] = parsePgArray(dataRaw.ingredients)
+            const ingredientsArr: string[] = parsePgArray(dataRaw.ingredients[0])
             setRecipe({ ...dataRaw, ingredients: ingredientsArr });
             setIsEditOpen(false);
           }
