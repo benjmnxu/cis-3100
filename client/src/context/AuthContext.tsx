@@ -80,6 +80,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       credentials: "include",
     });
 
+    console.log("logout")
+
     setUser(null);
   };
 

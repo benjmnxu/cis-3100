@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
-import logo from "../assets/ChatGPT Image Apr 15, 2025, 06_21_23 PM.png";
+import logo from "../assets/logo.png";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

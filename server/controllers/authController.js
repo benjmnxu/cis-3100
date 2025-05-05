@@ -53,3 +53,8 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Server error during login' });
   }
 };
+
+exports.logout = async (req, res) => {
+  res.clearCookie('token', { httpOnly: true, sameSite: "lax" });
+  res.status(200).json({ message: 'Logged out successfully' });
+}

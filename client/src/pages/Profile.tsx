@@ -14,7 +14,7 @@ type UserProfile = {
 const BASE_URL = "http://localhost:8000/api";
 
 export default function Profile() {
-  const { user: authUser, logout } = useAuth(); // ⬅️ bring in logout
+  const { user: authUser, logout } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [favorites, setFavorites] = useState<Recipe[]>([]);
   const [userRecipes, setUserRecipes] = useState<Recipe[]>([]);

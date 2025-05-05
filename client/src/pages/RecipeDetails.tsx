@@ -6,6 +6,8 @@ import { ImageObject, Recipe, Review } from "../types/types";
 import { useAuth } from "../context/AuthContext";
 import EditRecipeModal from "../components/EditRecipeModal";
 import RecipeImageBanner from "../components/ImageBanner";
+import Chatbox from "../components/Chatbox";
+
 
 const BASE_URL = "http://localhost:8000/api";
 
@@ -40,6 +42,12 @@ export default function RecipeDetail() {
   const [optionsMenu, setOptionsMenu] = useState<boolean>(false);
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+
+  const [showAssistant, setShowAssistant] = useState<boolean>(false);
+  const [assistantInput, setAssistantInput] = useState<string>("");
+  const [assistantMessages, setAssistantMessages] = useState<
+    { role: "user" | "gusteau"; text: string }[]
+  >([]);
 
   useEffect(() => {
     if (!id) {
@@ -275,7 +283,7 @@ export default function RecipeDetail() {
       : false;
 
   return (
-    <div className="max-w-5xl mx-auto p-4 space-y-6">
+    <div className="max-w-5xl mx-auto p-4 space-y-4">
       <button onClick={() => navigate(-1)} className="text-blue-600 hover:underline move left">
         ← Back
       </button>
@@ -293,7 +301,7 @@ export default function RecipeDetail() {
           >
           Options ▼
         </button>
-         {optionsMenu && (
+         {user && optionsMenu && (
           <div
             className="absolute right-0 top-full mt-2 bg-white border rounded shadow-lg z-10 min-w-max"
           >
@@ -364,6 +372,16 @@ export default function RecipeDetail() {
         <div>Prep: {recipe.prep_time} min</div>
         <div>Cook: {recipe.cook_time} min</div>
       </div>
+      <button 
+        className="bg-[#c6b5a5] text-black px-3 py-1 !border-black  rounded mb-2"
+        onClick={() => setShowAssistant(prev => !prev)}
+      >
+        {showAssistant ? "Hide Gusteau" : "Ask Gusteau for Help"}
+      </button>
+
+      {showAssistant && <Chatbox recipe={recipe}/>}
+
+
 
       <section>
         <h2 className="text-xl font-semibold mb-2">Reviews</h2>

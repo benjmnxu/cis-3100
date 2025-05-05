@@ -11,6 +11,7 @@ const imageRoutes = require('./routes/imageRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const chatRoutes = require(`./routes/chatRoutes`);
 
 
 const app = express();
@@ -40,6 +41,7 @@ app.use('/api', imageRoutes);
 app.use('/api', searchRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/chat', chatRoutes)
 
 
 
