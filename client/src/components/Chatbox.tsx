@@ -15,7 +15,6 @@ interface ChatboxProps {
 }
 
 export default function Chatbox({ recipe }: ChatboxProps) {
-  // 1) Serialize the recipe into a prompt‑friendly blob
   const recipeContent = [
     `Title: ${recipe.title}`,
     `Description: ${recipe.description}`,
@@ -27,7 +26,6 @@ export default function Chatbox({ recipe }: ChatboxProps) {
     `Instructions:\n${recipe.instructions}`,
   ].join("\n\n");
 
-  // 2) Seed Gusteau’s persona + recipe context
   const initialMessages: Message[] = [
     {
       role: "system",
@@ -139,10 +137,8 @@ export default function Chatbox({ recipe }: ChatboxProps) {
         )}
       </div>
 
-      {/* Error message */}
       {error && <div className="text-red-600 text-sm italic mt-2">{error}</div>}
 
-      {/* Input form */}
       <form onSubmit={handleSubmit} className="flex gap-2 mt-2">
         <div className="border rounded bg-[#fdf5e6] flex items-center w-full px-2">
           <input

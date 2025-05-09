@@ -159,7 +159,7 @@ export default function SearchBar({
               setIsHistoryOpen(false);
             }}
             disabled={loading}
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+            className="px-4 py-2 bg-blue-500 rounded disabled:opacity-50 !bg-[#e0d1a8]"
           >
             {loading ? "Searching..." : "Go"}
           </button>

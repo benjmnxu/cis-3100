@@ -373,8 +373,9 @@ export default function RecipeDetail() {
         <div>Cook: {recipe.cook_time} min</div>
       </div>
       <button 
-        className="bg-[#c6b5a5] text-black px-3 py-1 !border-black  rounded mb-2"
+        className="bg-[#e0d1a8] text-black px-3 py-1 !border-black rounded mb-2"
         onClick={() => setShowAssistant(prev => !prev)}
+        disabled={user === null}
       >
         {showAssistant ? "Hide Gusteau" : "Ask Gusteau for Help"}
       </button>

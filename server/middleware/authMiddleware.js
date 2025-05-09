@@ -18,9 +18,9 @@ function optional(req, res, next) {
   if (token) {
     try {
       req.user = jwt.verify(token, process.env.JWT_SECRET);
-    } catch {
+    } catch (err) {
       console.error(err);
-      res.status(err.status).json({ message: 'Error' });
+      res.status(err).json({ message: 'Error' });
     }
   }
   next();
